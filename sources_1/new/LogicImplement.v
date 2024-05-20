@@ -298,7 +298,7 @@ module LogicImplement(
             lef_p = ~lef[3] & lef[2];
             if (lef_p) begin
                 if (positionX == 0) begin
-                    canLeft = 0
+                    canLeft = 0;
                 end
                 else begin
                     case (rotation)
