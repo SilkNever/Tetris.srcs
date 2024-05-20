@@ -3,14 +3,17 @@ Vivado版本：2020.2
 板子：BASYS3
 
 ## 文件说明
-.xdc为管脚限制文件
+.xdc为管脚限制文件。
+
 ./sources_1/img/用于存放.coe文件，Background.coe是实际用到的文件，另一个是测试用的。
+
 ./sources_1/new/是项目源代码文件夹。其中：
 - Tetris_main.v是主文件，写了颜色选择的逻辑。
 - LogicImplement.v是俄罗斯方块运行时的逻辑以及通过主文件传来的坐标判断当前坐标是否存在方块。
 
 ## 使用工具
 BMP2Mif：用于bmp文件转coe文件。
+
 Asprite & Photoshop：画背景用的。
 
 ## 介绍
