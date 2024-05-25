@@ -63,7 +63,7 @@ module LogicImplement(
     reg rst_up;
     reg rst_down;
     reg gamePaused;
-    reg[0:2] rand; 
+    reg[0:2] rand = 0; 
 
     parameter initX = 3,
               initY = 0;
@@ -77,9 +77,17 @@ module LogicImplement(
     // 随机方块，所有下一个方块在这里roll
     // random不知道用得了用不了
     always @(posedge clk) begin
-        // rand = {$random} % 7;
-        // randomCube = cubes[rand * 7 +: 8];
-        randomCube = cubes[0:7];
+        rand = (rand + 1) % 7;
+        randomCube = cubes[rand * 8 +: 8];
+        // case (rand)
+        // 0: randomCube = cubes[0:7];
+        // 1: randomCube = cubes[8:15];
+        // 2: randomCube = cubes[16:23];
+        // 3: randomCube = cubes[24:31];
+        // 4: randomCube = cubes[32:39];
+        // 5: randomCube = cubes[40:47];
+        // 6: randomCube = cubes[48:55];
+        // endcase
     end
 
     reg[16:0] addresses;
@@ -176,9 +184,8 @@ module LogicImplement(
                 gameArea[i] = 0;
                 gameAreaWithoutCurrent[i] = 0;
             end
-            //currentCube = cubes[({$random} % 7) * 7 +: 8];
-            currentCube = cubes[0:7];
-            nextCube = randomCube;
+            currentCube = randomCube;
+            nextCube = cubes[(rand + 2) % 7 * 8 +: 8];
             positionX = initX;
             positionY = initY;
             initFinish = 1;
