@@ -1,14 +1,14 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
 // Company: 
-// Engineer: 
+// Engineer: gugugu
 // 
 // Create Date: 2024/03/18 15:37:48
 // Design Name: 
 // Module Name: LogicImplement
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
+// Project Name: Tetris
+// Target Devices: BASYS3
+// Tool Versions: 2020.2
 // Description: 
 // 
 // Dependencies: 
@@ -156,6 +156,8 @@ module LogicImplement(
     reg isDown = 0;
     reg canLeft = 0;
     reg canRight = 0;
+    reg canRotate;
+    reg[1:0] xOffset;
 
     integer k;
     
@@ -405,24 +407,83 @@ module LogicImplement(
             rot = {rot[2:0], rotate};
             rot_p = ~rot[3] & rot[2];
             if (rot_p) begin
+                xOffset = 0;
                 case(rotation) 
                 0: begin
-                    
+                    if (currentCube[4] | currentCube[5] | currentCube[6] | currentCube[7]) begin
+                        tempCube[0] = currentCube[4];
+                        tempCube[1] = currentCube[0];
+                        tempCube[2] = currentCube[5];
+                        tempCube[3] = currentCube[1];
+                        tempCube[4] = currentCube[6];
+                        tempCube[5] = currentCube[2];
+                        tempCube[6] = currentCube[7];
+                        tempCube[7] = currentCube[3];
+                    end
+                    else begin
+                        tempCube[0] = currentCube[0];
+                        tempCube[1] = 0;
+                        tempCube[2] = currentCube[1];
+                        tempCube[3] = 0;
+                        tempCube[4] = currentCube[2];
+                        tempCube[5] = 0;
+                        tempCube[6] = currentCube[3];
+                        tempCube[7] = 0;
+                    end
+                    canRotate = ~((tempCube[0] & gameAreaWithoutCurrent[positionY][positionX]) | (tempCube[1] & gameAreaWithoutCurrent[positionY][positionX + 1]) | (tempCube[2] & gameAreaWithoutCurrent[positionY + 1][positionX]) | (tempCube[3] & gameAreaWithoutCurrent[positionY + 1][positionX + 1]) | (tempCube[4] & gameAreaWithoutCurrent[positionY + 2][positionX]) | (tempCube[5] & gameAreaWithoutCurrent[positionY + 2][positionX + 1]) | (tempCube[6] & gameAreaWithoutCurrent[positionY + 3][positionX]) | (tempCube[7] & gameAreaWithoutCurrent[positionY + 3][positionX + 1]));
                 end
                 1: begin
-                    tempCube[0] <= currentCube[7];
-                    tempCube[1] <= currentCube[5];
-                    tempCube[2] <= currentCube[3];
-                    tempCube[3] <= currentCube[1];
-                    tempCube[4] <= currentCube[6];
-                    tempCube[5] <= currentCube[4];
-                    tempCube[6] <= currentCube[2];
-                    tempCube[7] <= currentCube[0];
+                    if (currentCube[6] | currentCube[7]) begin
+                        tempCube[0] = currentCube[6];
+                        tempCube[1] = currentCube[4];
+                        tempCube[2] = currentCube[2];
+                        tempCube[3] = currentCube[0];
+                        tempCube[4] = currentCube[7];
+                        tempCube[5] = currentCube[5];
+                        tempCube[6] = currentCube[3];
+                        tempCube[7] = currentCube[1];
+                        if (positionY == 9) begin
+                            xOffset = 3;
+                        end
+                        else if (positionY == 8) begin
+                            xOffset = 2;
+                        end
+                        else if (positionY == 7) begin
+                            xOffset = 1;
+                        end
+                    end
+                    else if (currentCube[4] | currentCube[5]) begin
+                        tempCube[0] = currentCube[4];
+                        tempCube[1] = currentCube[2];
+                        tempCube[2] = currentCube[0];
+                        tempCube[3] = 0;
+                        tempCube[4] = currentCube[5];
+                        tempCube[5] = currentCube[3];
+                        tempCube[6] = currentCube[1];
+                        tempCube[7] = 0;
+                        if (positionY == 8) begin
+                            xOffset = 1;
+                        end
+                    end
+                    else begin
+                        tempCube[0] = currentCube[2];
+                        tempCube[1] = currentCube[0];
+                        tempCube[2] = 0;
+                        tempCube[3] = 0;
+                        tempCube[4] = currentCube[3];
+                        tempCube[5] = currentCube[1];
+                        tempCube[6] = 0;
+                        tempCube[7] = 0;
+                    end
+                    canRotate = ~((tempCube[0] & gameAreaWithoutCurrent[positionY][positionX - xOffset]) | (tempCube[1] & gameAreaWithoutCurrent[positionY][positionX - xOffset + 1]) | (tempCube[2] & gameAreaWithoutCurrent[positionY][positionX - xOffset + 2]) | (tempCube[3] & gameAreaWithoutCurrent[positionY][positionX - xOffset + 3]) | (tempCube[4] & gameAreaWithoutCurrent[positionY + 1][positionX - xOffset]) | (tempCube[5] & gameAreaWithoutCurrent[positionY + 1][positionX - xOffset + 1]) | (tempCube[6] & gameAreaWithoutCurrent[positionY + 1][positionX - xOffset + 2]) | (tempCube[7] & gameAreaWithoutCurrent[positionY + 1][positionX - xOffset + 3]));
                 end
                 endcase
                 // check tempCube, if can rotate, then do it
-                
-                // rotation = ~rotation;
+                if (canRotate) begin
+                    currentCube = tempCube;
+                    positionX = positionX - xOffset;
+                    rotation = ~rotation;
+                end
             end
         end
     end
