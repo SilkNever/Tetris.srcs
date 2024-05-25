@@ -75,8 +75,10 @@ module LogicImplement(
     reg initFinish = 0;
 
     // 随机方块，所有下一个方块在这里roll
+    // random不知道用得了用不了
     always @(posedge clk) begin
-        //rand = {$random} % 7;
+        // rand = {$random} % 7;
+        // randomCube = cubes[rand * 7 +: 8];
         randomCube = cubes[0:7];
     end
 
@@ -174,7 +176,7 @@ module LogicImplement(
                 gameArea[i] = 0;
                 gameAreaWithoutCurrent[i] = 0;
             end
-            //currentCube = cubes[{$random} % 7];
+            //currentCube = cubes[({$random} % 7) * 7 +: 8];
             currentCube = cubes[0:7];
             nextCube = randomCube;
             positionX = initX;
@@ -240,9 +242,15 @@ module LogicImplement(
                 endcase
                 if (isDown == 1) begin
                     // 到底了就判断一波有没有能消除的行
-                    for(k = 19; k <= 0; k = k - 1) begin
-                        
+                    for(k = 19, i = 19; i > 0; i = i - 1) begin
+                        if (~gameArea[i]) begin
+                            gameArea[k] = gameArea[i];
+                            gameArea[i] = 0;
+                            k = k - 1;
+                        end
                     end
+                    gameArea[k] = gameArea[i];
+
                     for(k = 0; k < 20; k = k + 1) begin
                         gameAreaWithoutCurrent[k] = gameArea[k];
                     end
