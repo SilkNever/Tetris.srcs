@@ -35,7 +35,7 @@ module Tetris_main (
     output x_sync,
     output y_sync);
     
-    //使用640x480分辨率，��?要时钟频��?25MHz，输入clk_100m��?100MHz��?
+    //使用640x480分辨率，要时钟频率25MHz，输入clk_100m是100MHz时钟
     reg clk = 0;
     reg tCount = 0;
     always @(posedge clk_100m) begin
@@ -60,7 +60,7 @@ module Tetris_main (
               yHeight = 10'd480,
               yTotal = 10'd525;
     
-    //设置行同步和列同��?
+    //设置行同步和列同步
     reg [9:0] xCount, yCount;
     always @(posedge clk) begin
         if (xCount == xTotal - 1) begin
@@ -74,13 +74,13 @@ module Tetris_main (
             yCount = 0;
         end
     end
-    //过了行同步和列同步的宽度将其��? 1，提示显示器即将发光
+    //过了行同步和列同步的宽度将其置为 1，提示显示器即将发光
     assign x_sync = (xCount >= xSyncWidth);
     assign y_sync = (yCount >= ySyncHeight);
     
-    //--------上面为显示设置，下面是项目设��??--------
+    //--------上面为显示设置，下面是项目设置--------
     
-    //显示要的宽度和高��?
+    //显示要的宽度和高度
     parameter width = 10'd320, 
               height = 10'd320;
     //颜色
@@ -93,7 +93,7 @@ module Tetris_main (
     assign isEnable = (xCount >= xSyncWidth + xLBoard + (xWidth - width) / 2) && (xCount < xSyncWidth + xLBoard + (xWidth + width) / 2) && (yCount >= ySyncHeight + yUBoard + (yHeight - height) / 2) && (yCount < ySyncHeight + yUBoard + (yHeight + height) / 2);
     assign figStart = (xCount == xSyncWidth + xLBoard + (xWidth - width) / 2) && (yCount == ySyncHeight + yUBoard + (yHeight - height) / 2);
     
-    //基本参数和变��?
+    //基本参数和变量
     // reg[3:0] screen[319:0][319:0];
     reg [16:0] address;
     

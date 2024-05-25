@@ -36,7 +36,7 @@ module LogicImplement(
 
     parameter width = 10'd320;
 
-    //框定方块和分数显示区�????????????
+    //框定方块和分数显示区（分数懒得算了，要显示用七段数码管简单多了）
     parameter cubeLeft = 10'd10,
               cubeWidth = 10'd150,
               cubeTop = 10'd10,
@@ -67,14 +67,14 @@ module LogicImplement(
 
     parameter initX = 3,
               initY = 0;
-    // 方块方向, 0: 横向�?????????1: 纵向
+    // 方块方向, 0: 横向 1: 纵向
     reg rotation = 0;
     reg[0:3] positionX;
     reg[0:4] positionY;
 
     reg initFinish = 0;
 
-    // 随机方块，所有下�???个方块在这里�???
+    // 随机方块，所有下一个方块在这里roll
     always @(posedge clk) begin
         //rand = {$random} % 7;
         randomCube = cubes[0:7];
@@ -87,7 +87,7 @@ module LogicImplement(
 
     integer j;
 
-    // 判断当前地址是否存在方块，存在显示方块，不存在显示背�???????
+    // 判断当前地址是否存在方块，存在显示方块，不存在显示背景图片
     always @(posedge clk) begin
         haveCube = 0;
         cubeArea = 0;
@@ -139,7 +139,7 @@ module LogicImplement(
         end
     end
 
-    //-----上：确定是否有方块�?�下：运行�?�辑部分�???????????------
+    //-----上：确定是否有方块 下：运行逻辑部分------
     
     assign flag = gamePaused;
 
@@ -162,7 +162,8 @@ module LogicImplement(
     integer k;
     
     // 初始化加各种功能
-    // 又到了最讨厌的一个变量不能放在两个always里赋值的时�??
+    // 又到了最讨厌的一个变量不能放在两个always里赋值的时候
+    // verilog魅力时刻
     always @(posedge clk) begin
         // init
         rst = {rst[2:0], reset};
@@ -215,7 +216,7 @@ module LogicImplement(
                         isDown = 1;
                     end
                     else if (positionY == 18) begin
-                        // 贴地或�?�下面有东西
+                        // 贴地或方块下面有东西
                         isDown = (currentCube[4] | currentCube[5] | currentCube[6] | currentCube[7]) | (currentCube[0] & gameAreaWithoutCurrent[positionY + 1][positionX]) | (currentCube[1] & gameAreaWithoutCurrent[positionY + 1][positionX + 1]) | (currentCube[2] & gameAreaWithoutCurrent[positionY + 1][positionX + 2]) | (currentCube[3] & gameAreaWithoutCurrent[positionY + 1][positionX + 3]);
                     end
                     else begin
