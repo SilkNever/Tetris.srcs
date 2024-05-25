@@ -430,7 +430,18 @@ module LogicImplement(
                         tempCube[6] = currentCube[3];
                         tempCube[7] = 0;
                     end
-                    canRotate = ~((tempCube[0] & gameAreaWithoutCurrent[positionY][positionX]) | (tempCube[1] & gameAreaWithoutCurrent[positionY][positionX + 1]) | (tempCube[2] & gameAreaWithoutCurrent[positionY + 1][positionX]) | (tempCube[3] & gameAreaWithoutCurrent[positionY + 1][positionX + 1]) | (tempCube[4] & gameAreaWithoutCurrent[positionY + 2][positionX]) | (tempCube[5] & gameAreaWithoutCurrent[positionY + 2][positionX + 1]) | (tempCube[6] & gameAreaWithoutCurrent[positionY + 3][positionX]) | (tempCube[7] & gameAreaWithoutCurrent[positionY + 3][positionX + 1]));
+                    if (positionY == 19) begin
+                        canRotate = 0;
+                    end
+                    else if (positionY == 18 && (currentCube[2] | currentCube[3] | currentCube[6] | currentCube[7])) begin
+                        canRotate = 0;
+                    end
+                    else if (positionY == 17 && (currentCube[3] | currentCube[7])) begin
+                        canRotate = 0;
+                    end
+                    else begin
+                        canRotate = ~((tempCube[0] & gameAreaWithoutCurrent[positionY][positionX]) | (tempCube[1] & gameAreaWithoutCurrent[positionY][positionX + 1]) | (tempCube[2] & gameAreaWithoutCurrent[positionY + 1][positionX]) | (tempCube[3] & gameAreaWithoutCurrent[positionY + 1][positionX + 1]) | (tempCube[4] & gameAreaWithoutCurrent[positionY + 2][positionX]) | (tempCube[5] & gameAreaWithoutCurrent[positionY + 2][positionX + 1]) | (tempCube[6] & gameAreaWithoutCurrent[positionY + 3][positionX]) | (tempCube[7] & gameAreaWithoutCurrent[positionY + 3][positionX + 1]));
+                    end
                 end
                 1: begin
                     if (currentCube[6] | currentCube[7]) begin
