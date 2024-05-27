@@ -51,8 +51,8 @@ module LogicImplement(
               scoreHeight = 10'd32,
               scoreSpan = 10'd19;
 
-    reg[0:10] gameArea[0:19];
-    reg[0:10] gameAreaWithoutCurrent[0:19];
+    reg[0:9] gameArea[0:19];
+    reg[0:9] gameAreaWithoutCurrent[0:19];
     reg[0:7] currentCube;
     reg[0:7] nextCube;
     reg[0:7] randomCube;
@@ -514,6 +514,31 @@ module LogicImplement(
                 if (canRotate) begin
                     currentCube = tempCube;
                     positionX = positionX - xOffset;
+                    for(k = 0; k < 20; k = k + 1) begin
+                        gameArea[k] = gameAreaWithoutCurrent[k];
+                    end
+                    case (rotation)
+                    0: begin
+                        gameArea[positionY][positionX] = currentCube[0] | gameAreaWithoutCurrent[positionY][positionX];
+                        gameArea[positionY][positionX + 1] = currentCube[1] | gameAreaWithoutCurrent[positionY][positionX + 1];
+                        gameArea[positionY][positionX + 2] = currentCube[2] | gameAreaWithoutCurrent[positionY][positionX + 2];
+                        gameArea[positionY][positionX + 3] = currentCube[3] | gameAreaWithoutCurrent[positionY][positionX + 3];
+                        gameArea[positionY + 1][positionX] = currentCube[4] | gameAreaWithoutCurrent[positionY + 1][positionX];
+                        gameArea[positionY + 1][positionX + 1] = currentCube[5] | gameAreaWithoutCurrent[positionY + 1][positionX + 1];
+                        gameArea[positionY + 1][positionX + 2] = currentCube[6] | gameAreaWithoutCurrent[positionY + 1][positionX + 2];
+                        gameArea[positionY + 1][positionX + 3] = currentCube[7] | gameAreaWithoutCurrent[positionY + 1][positionX + 3];
+                    end
+                    1: begin
+                        gameArea[positionY][positionX] = currentCube[0] | gameAreaWithoutCurrent[positionY][positionX];
+                        gameArea[positionY][positionX + 1] = currentCube[1] | gameAreaWithoutCurrent[positionY][positionX + 1];
+                        gameArea[positionY + 1][positionX] = currentCube[2] | gameAreaWithoutCurrent[positionY + 1][positionX];
+                        gameArea[positionY + 1][positionX + 1] = currentCube[3] | gameAreaWithoutCurrent[positionY + 1][positionX + 1];
+                        gameArea[positionY + 2][positionX] = currentCube[4] | gameAreaWithoutCurrent[positionY + 2][positionX];
+                        gameArea[positionY + 2][positionX + 1] = currentCube[5] | gameAreaWithoutCurrent[positionY + 2][positionX + 1];
+                        gameArea[positionY + 3][positionX] = currentCube[6] | gameAreaWithoutCurrent[positionY + 3][positionX];
+                        gameArea[positionY + 3][positionX + 1] = currentCube[7] | gameAreaWithoutCurrent[positionY + 3][positionX + 1];
+                    end
+                    endcase
                     rotation = ~rotation;
                 end
             end
