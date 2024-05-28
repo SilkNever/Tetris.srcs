@@ -250,15 +250,15 @@ module LogicImplement(
                 if (isDown == 1) begin
                     // 到底了就判断一波有没有能消除的行
                     for(k = 19, i = 19; i > 0; i = i - 1) begin
-                        if (~gameArea[i] > 0) begin
+                        if (gameArea[i] == 10'b11_1111_1111) begin
+                            gameArea[i] = 0;
+                        end
+                        else begin
                             gameArea[k] = gameArea[i];
                             if (i < k) begin
                                 gameArea[i] = 0;
                             end
                             k = k - 1;
-                        end
-                        else begin
-                            gameArea[i] = 0;
                         end
                     end
                     gameArea[k] = gameArea[i];
